@@ -8,9 +8,20 @@ use Illuminate\Database\Eloquent\Model;
 class Kelas extends Model
 {
     use HasFactory;
-    protected $fillable = ['tingkat'];
-    public function siswa()
-    {
-        return $this->hasOne(related: Siswa::class);
-    }
+ protected $fillable = [
+    'tingkat',
+    'jurusan_id',
+    'gelombang_belajar_id'
+];
+
+public function jurusan()
+{
+    return $this->belongsTo(Jurusan::class);
+}
+
+public function gelombang()
+{
+    return $this->belongsTo(Gelombang_belajar::class);
+}
+
 }

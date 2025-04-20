@@ -30,6 +30,7 @@
     <link href="https://demos.creative-tim.com/argon-dashboard-pro/assets/css/nucleo-svg.css" rel="stylesheet" />
     <!-- Font Awesome Icons -->
     <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+@yield('css')
     <!-- CSS Files -->
     <link id="pagestyle" href="{{ asset('../assets/css/argon-dashboard.css?v=2.1.0') }}" rel="stylesheet" />
 </head>
@@ -121,6 +122,9 @@
     <script src="{{ asset('../assets/js/plugins/perfect-scrollbar.min.js') }}"></script>
     <script src="{{ asset('../assets/js/plugins/smooth-scrollbar.min.js') }}"></script>
     <script src="{{ asset('../assets/js/plugins/chartjs.min.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+        integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    @stack('javascript')
     <script>
         var ctx1 = document.getElementById("chart-line").getContext("2d");
 

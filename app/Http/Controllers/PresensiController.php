@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Alert;
 use App\Models\Acara;
 use App\Models\Presensi;
 use App\Models\SiswaEkskul;
-use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
 
 class PresensiController extends Controller
 {
@@ -16,6 +17,7 @@ class PresensiController extends Controller
         $data_siswa = SiswaEkskul::with('siswa.user')
             ->where('ekskul_id', $acara->ekskul_id)
             ->get();
+        confirmDelete('Delete', 'yakin?');
 
         return view('pembina.presensi.show', compact('acara', 'data_siswa'));
     }
@@ -35,8 +37,9 @@ class PresensiController extends Controller
                 ]
             );
         }
+        Alert::success('success', "Presensi berhasil disimpan")->autoClose(1000);
 
-        return redirect()->route('acara.index')->with('success', 'Presensi berhasil disimpan');
+        return redirect()->route('acara.index');
     }
 
     public function rekap(Acara $acara)
@@ -48,30 +51,28 @@ class PresensiController extends Controller
         return view('pembina.presensi.rekap', compact('acara', 'presensis'));
     }
 
-   public function edit($acara_id)
+    public function edit($acara_id)
+    {
+        $acara = Acara::findOrFail($acara_id);
+        $siswaEkskuls = SiswaEkskul::with([
+            'siswa.user',
+            'presensis' => function ($query) use ($acara_id) {
+                $query->where('acara_id', $acara_id);
+            },
+        ])->where('ekskul_id', $acara->ekskul_id)->get();
+
+        return view('pembina.presensi.edit_rekap', compact('acara', 'siswaEkskuls'));
+    }
+
+   public function update(Request $request, $acara_id)
 {
-    $acara = Acara::findOrFail($acara_id);
-
-    $siswaEkskuls = SiswaEkskul::with([
-    'siswa.user',
-    'presensi' => function ($query) use ($acara_id) {
-        $query->where('acara_id', $acara_id);
-    },
-])->where('ekskul_id', $acara->ekskul_id)
-    ->get();
-
-
-    return view('pembina.presensi.edit_rekap', compact('acara', 'siswaEkskuls'));
-}
-
-public function update(Request $request, $acara_id)
-{
-
     $request->validate([
         'presensi' => 'required|array',
         'presensi.*.siswa_id' => 'required|integer',
         'presensi.*.keterangan' => 'required|string',
     ]);
+
+    $acara = Acara::findOrFail($acara_id); 
 
     foreach ($request->presensi as $data) {
         Presensi::updateOrCreate(
@@ -81,23 +82,24 @@ public function update(Request $request, $acara_id)
             ],
             [
                 'keterangan' => $data['keterangan'],
+                'ekskul_id' => $acara->ekskul_id, 
             ]
         );
     }
 
-    return redirect()->route('acara.index')->with('success', 'Rekap presensi berhasil diperbarui');
+    Alert::success('success', "Rekap presensi berhasil diperbarui")->autoClose(1000);
+    return redirect()->route('acara.index');
 }
 
+    public function exportPdf($acara_id)
+    {
+        $acara = Acara::findOrFail($acara_id);
+        $presensis = Presensi::where('acara_id', $acara_id)->get();
 
-public function exportPdf($acara_id)
-{
-    $acara = Acara::findOrFail($acara_id);
-    $presensis = Presensi::where('acara_id', $acara_id)->get();
+        $pdf = Pdf::loadView('pembina.presensi.pdf', compact('acara', 'presensis'))
+            ->setPaper('A4', 'portrait');
 
-    $pdf = Pdf::loadView('pembina.presensi.pdf', compact('acara', 'presensis'))
-        ->setPaper('A4', 'portrait');
-
-    return $pdf->download('Rekap-Presensi-'.$acara->nama.'.pdf');
-}
+        return $pdf->download('Rekap-Presensi-' . $acara->nama . '.pdf');
+    }
 
 }

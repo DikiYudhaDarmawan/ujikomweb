@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('acara_id')->constrained('acaras')->onDelete('cascade');
             $table->foreignId('siswa_id')->constrained('siswas')->onDelete('cascade');
             $table->foreignId('ekskul_id')->constrained('ekskuls')->onDelete('cascade');
-            $table->enum('keterangan', ['Hadir', 'Izin','sakit','Alpha'])->default('Hadir');
+            $table->enum('keterangan', ['Hadir', 'Izin','Sakit','Alpha'])->default('Hadir');
             $table->timestamps();
         });
     }

@@ -48,7 +48,7 @@
                                                 <form action="{{ route('evaluasi.destroy', $data->id) }}" method="POST">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm bg-gradient-danger px-3 mb-0">
+                                                    <button type="submit" class="btn btn-sm bg-gradient-danger px-3 mb-0" onclick="confirmDelete({{ $data->id }})">
                                                         <i class="fas fa-trash me-2"></i>Delete
                                                     </button>
                                                 </form>

@@ -36,6 +36,7 @@
                                             @endphp
                                             <option value="Hadir" {{ $current == 'Hadir' ? 'selected' : '' }}>Hadir</option>
                                             <option value="Izin" {{ $current == 'Izin' ? 'selected' : '' }}>Izin</option>
+                                            <option value="Sakit" {{ $current == 'Sakit' ? 'selected' : '' }}>Sakit</option>
                                             <option value="Alpha" {{ $current == 'Alpha' ? 'selected' : '' }}>Alpha</option>
                                         </select>
                                     </td>

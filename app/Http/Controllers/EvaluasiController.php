@@ -8,27 +8,30 @@ use App\Models\Evaluasi;
 use App\Models\Siswa;
 use App\Models\SiswaEkskul;
 use Illuminate\Http\Request;
+use Alert;
+
 
 class EvaluasiController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-   public function index()
-{
-    $ekskul = Ekskul::where('pembina_id', auth()->id())->firstOrFail();
+//    public function index()
+// {
+//     $ekskul = Ekskul::where('pembina_id', auth()->id())->firstOrFail();
     
-    $data_siswa = SiswaEkskul::with(['siswa.user', 'ekskul'])
-        ->where('ekskul_id', $ekskul->id)
-        ->firstOrFail();
+//     $data_siswa = SiswaEkskul::with(['siswa.user', 'ekskul'])
+//         ->where('ekskul_id', $ekskul->id)
+//         ->firstOrFail();
 
-    $evaluasi = Evaluasi::with(['siswa.user', 'ekskul', 'pembina'])
-        ->where('siswa_id', $data_siswa->siswa->id)
-        ->where('ekskul_id', $ekskul->id)
-        ->get();
+//     $evaluasi = Evaluasi::with(['siswa.user', 'ekskul', 'pembina'])
+//         ->where('siswa_id', $data_siswa->siswa->id)
+//         ->where('ekskul_id', $ekskul->id)
+//         ->get();
+// confirmDelete('Delete', 'yakin?');
 
-    return view('pembina.evaluasi.index', compact('ekskul', 'evaluasi', 'data_siswa'));
-}
+//     return view('pembina.evaluasi.index', compact('ekskul', 'evaluasi', 'data_siswa'));
+// }
 
 
     /**
@@ -54,8 +57,8 @@ class EvaluasiController extends Controller
         $nilai->description = $request->description;
         $nilai->ekskul_id = $siswaEkskul->ekskul_id;
         $nilai->save();
+Alert('success', 'Data nilai berhasil disimpan!');
 
-        // Redirect ke halaman show menggunakan ID pivot
         return redirect()->route('evaluasi.show', ['evaluasi' => $siswaEkskul->id]);
     }
 
@@ -91,23 +94,32 @@ class EvaluasiController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
-        $nilai = Evaluasi::findOrFail($id);
-        $nilai->grade = $request->grade;
-        $nilai->description = $request->description;
-        $nilai->save();
+   public function update(Request $request, string $id)
+{
+    $nilai = Evaluasi::findOrFail($id);
+    $nilai->grade = $request->grade;
+    $nilai->description = $request->description;
+    $nilai->save();
 
-        return redirect()->route('evaluasi.show', ['evaluasi' => $nilai->siswa_id]);
-    }
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        $nilai = Evaluasi::findOrFail($id);
-        $nilai->delete();
-        return redirect()->route('evaluasi.show', ['evaluasi' => $nilai->siswa_id]);
+    $siswaEkskul = SiswaEkskul::where('siswa_id', $nilai->siswa_id)
+        ->where('ekskul_id', $nilai->ekskul_id)
+        ->first();
+Alert('success', 'Data nilai berhasil diperbarui!');
 
-    }
+    return redirect()->route('evaluasi.show', ['evaluasi' => $siswaEkskul->id]);
+}
+
+public function destroy(string $id)
+{
+    $nilai = Evaluasi::findOrFail($id);
+    
+    $siswaEkskul = SiswaEkskul::where('siswa_id', $nilai->siswa_id)
+        ->where('ekskul_id', $nilai->ekskul_id)
+        ->first();
+
+    $nilai->delete();
+Alert('success', 'Data nilai berhasil dihapus!');
+
+    return redirect()->route('evaluasi.show', ['evaluasi' => $siswaEkskul->id]);
+}
 }

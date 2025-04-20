@@ -46,10 +46,10 @@
                                             <a href="{{ route('acara.edit', $data->id) }}" class="btn btn-sm bg-gradient-info px-3 mb-0">
                                                 <i class="fas fa-pencil-alt me-2"></i> Edit
                                             </a>
-                                            <form action="{{ route('acara.destroy', $data->id) }}" method="POST" onsubmit="return confirm('Yakin ingin hapus acara ini?')">
+                                            <form action="{{ route('acara.destroy', $data->id) }}" method="POST">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-sm bg-gradient-danger px-3 mb-0">
+                                                <button type="submit" class="btn btn-sm bg-gradient-danger px-3 mb-0" onclick="confirmDelete({{ $data->id }})">
                                                     <i class="fas fa-trash me-2"></i> Delete
                                                 </button>
                                             </form>

@@ -33,6 +33,12 @@
           <span class="nav-link-text">Ekskul</span>
         </a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{ route('siswaekskul.index') }}">
+          <i class="fas fa-school me-2"></i>
+          <span class="nav-link-text">Siswa</span>
+        </a>
+      </li>
       <!-- Jika ada menu tambahan, Anda bisa menambahkannya di sini -->
       <!--
       <li class="nav-item">

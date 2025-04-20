@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Ekskul;
 use App\Models\Pengumuman;
 use Illuminate\Http\Request;
+use Alert;
+
 
 class PengumumanController extends Controller
 {
@@ -16,6 +18,7 @@ class PengumumanController extends Controller
         $ekskul = Ekskul::where('pembina_id', auth()->id())->first();
 
         $pengumuman = Pengumuman::where('ekskul_id', $ekskul->id)->get();
+confirmDelete('Delete', 'yakin?');
 
         return view('pembina.pengumuman.index', compact('pengumuman'));
     }
@@ -47,9 +50,9 @@ class PengumumanController extends Controller
         }
 
         $pengumuman->save();
+Alert::success('success', "Pengumuman berhasil ditambahkan")->autoClose(1000);
 
-        return redirect()->route('pengumuman.index')
-            ->with('success', 'Pengumuman berhasil ditambahkan');
+        return redirect()->route('pengumuman.index');
     }
 
     /**
@@ -92,9 +95,9 @@ class PengumumanController extends Controller
         }
 
         $pengumuman->save();
+Alert::success('success', "Pengumuman berhasil diperbarui")->autoClose(1000);
 
-        return redirect()->route('pengumuman.index')
-            ->with('success', 'Pengumuman berhasil diperbarui');
+        return redirect()->route('pengumuman.index');
 
     }
 
@@ -105,9 +108,9 @@ class PengumumanController extends Controller
     {
         $pengumuman = Pengumuman::findOrFail($id);
         $pengumuman->delete();
+Alert::success('success', "Pengumuman berhasil dihapus")->autoClose(1000);
 
-        return redirect()->route('pengumuman.index')
-            ->with('success', 'Pengumuman berhasil dihapus');
-    }
+        return redirect()->route('pengumuman.index');
+        }
 
 }

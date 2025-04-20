@@ -28,10 +28,15 @@ class Ekskul extends Model
     {
         return $this->hasMany(SiswaEkskul::class, 'ekskul_id');
     }
-
-    public function siswa()
+        
+    public function acara()
 {
-    return $this->belongsTo(Siswa::class, 'siswa_id');
+    return $this->hasMany(Acara::class);
 }
-    
+
+public function presensi()
+{
+    return $this->hasMany(Presensi::class);
+}
+
 }

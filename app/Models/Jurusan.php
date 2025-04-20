@@ -13,4 +13,5 @@ class Jurusan extends Model
     {
         return $this->hasOne(related: Siswa::class);
     }
+
 }

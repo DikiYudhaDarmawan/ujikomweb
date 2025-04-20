@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Ekskul;
 use App\Models\Kelas;
+use App\Models\Jurusan;
 use App\Models\SiswaEkskul;
 use Illuminate\Http\Request;
 
@@ -12,15 +13,25 @@ class DataSiswaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $ekskul = Ekskul::where('pembina_id', auth()->id())->first();
-        $data_siswa = SiswaEkskul::where('ekskul_id', $ekskul->id)->get();
-        $kelass = Kelas::all();
-        
-        
-        return view('pembina.data_siswa.index', compact('data_siswa','ekskul','kelass'));
-    }
+ public function index(Request $request)
+{
+    $ekskul = Ekskul::where('pembina_id', auth()->id())->first();
+    $kelass = Kelas::all();
+    $jurusans = Jurusan::all(); // ambil semua jurusan
+
+    $search = $request->search;
+    $kelas = $request->kelas;
+    $jurusan = $request->jurusan;
+
+    $data_siswa = SiswaEkskul::with('siswa.user', 'siswa.kelas', 'siswa.jurusan')
+        ->where('ekskul_id', $ekskul->id)
+        ->get();
+
+    return view('pembina.data_siswa.index', compact('data_siswa', 'ekskul', 'kelass', 'jurusans', 'search', 'kelas', 'jurusan'));
+}
+
+
+
 
     /**
      * Show the form for creating a new resource.

@@ -68,20 +68,23 @@
                                         </td>
 
                                         <td class="align-middle text-center">
-                                            <div class="d-flex ms-auto justify-content-center basg-2">
+                                            <div class="d-flex justify-content-center gap-3">
                                                 <a href="{{ route('pengumuman.edit', $data->id) }}"
-                                                    class="btn btn-sm bg-gradient-info px-3 mb-0">
-                                                    <i class="fas fa-pencil-alt me-2"></i>Edit
+                                                    class="btn btn-info btn-md text-white px-4 py-2">
+                                                    <i class="fas fa-pencil-alt me-2"></i> Edit
                                                 </a>
-                                                <form action="{{ route('pengumuman.destroy', $data->id) }}" method="POST">
+                                                <form action="{{ route('pengumuman.destroy', $data->id) }}" method="POST"
+                                                    onsubmit="return confirmDelete({{ $data->id }})">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm bg-gradient-danger px-3 mb-0">
-                                                        <i class="fas fa-trash me-2"></i>Delete
+                                                    <button type="submit"
+                                                     class="btn btn-danger btn-md px-4 py-2"  onclick="confirmDelete({{ $data->id }})">
+                                                        <i class="fas fa-trash me-2"></i> Delete
                                                     </button>
                                                 </form>
                                             </div>
                                         </td>
+
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -92,3 +95,6 @@
         </div>
     </div>
 @endsection
+
+
+

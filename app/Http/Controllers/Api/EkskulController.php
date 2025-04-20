@@ -31,14 +31,21 @@ class EkskulController extends Controller
     }
 
     // Ambil semua ekskul
-    $ekskuls = Ekskul::all()->map(function ($ekskul) use ($siswaId) {
-        // Cek apakah siswa sudah mendaftar ekskul ini
-        $ekskul->is_registered = DB::table('siswa_ekskuls')
-            ->where('siswa_id', $siswaId)
-            ->where('ekskul_id', $ekskul->id)
-            ->exists();
-        return $ekskul;
-    });
+  $ekskuls = Ekskul::all()->map(function ($ekskul) use ($siswaId) {
+    $ekskul->is_registered = DB::table('siswa_ekskuls')
+        ->where('siswa_id', $siswaId)
+        ->where('ekskul_id', $ekskul->id)
+        ->exists();
+
+    // Tambahkan full URL untuk gambar
+    if ($ekskul->foto) {
+       $ekskul->foto = asset('storage/' . $ekskul->foto);
+
+    }
+
+    return $ekskul;
+});
+
 
     return response()->json([
         'success' => true,

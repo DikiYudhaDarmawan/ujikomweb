@@ -9,8 +9,8 @@ class Gelombang_belajar extends Model
 {
     use HasFactory;
      protected $fillable = ['gelombang'];
-    public function siswa()
+    public function siswas()
     {
-        return $this->hasOne(related: Siswa::class);
+        return $this->hasMany(Siswa::class, 'gelombang_belajar_id');
     }
 }
